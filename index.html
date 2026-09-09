@@ -1,43 +1,166 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visor SIG - Introducción a GitHub</title>
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
+  <meta charset="utf-8">
+  <title>Visor de ejemplo</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
-    #map { height: 100%; }
-    .titulo {
+    html, body, #map { height: 100%; margin: 0; font-family: system-ui, sans-serif; }
+
+    #panel {
       position: absolute;
+      top: 10px;
+      right: 10px;
       z-index: 1000;
-      top: 12px;
-      left: 50px;
-      background: white;
-      padding: 10px 14px;
-      border-radius: 6px;
-      box-shadow: 0 1px 5px rgba(0,0,0,.35);
-      max-width: 360px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      padding: 12px 14px;
+      width: 230px;
+      font-size: 13px;
     }
-    .titulo h3 { margin: 0 0 4px; }
-    .titulo p { margin: 0; font-size: 13px; }
+    #panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+    #panel p {
+      margin: 0 0 10px;
+      color: #555;
+      line-height: 1.4;
+    }
+    #fileInput {
+      width: 100%;
+      font-size: 12px;
+    }
+    #layerList {
+      margin-top: 10px;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    #layerList div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    #status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #b5651d;
+    }
   </style>
 </head>
-
 <body>
-  <div class="titulo">
-    <h3>Visor SIG de demostración</h3>
-    <p>Límites administrativos y parcelas de café y musáceas.</p>
-  </div>
-
   <div id="map"></div>
 
+  <div id="panel">
+    <h3>Cargar capa nueva</h3>
+    <p>Subí un archivo <strong>GeoJSON</strong> (.geojson o .json) desde tu computadora para agregarlo al mapa.</p>
+    <input type="file" id="fileInput" accept=".geojson,.json" />
+    <div id="status"></div>
+    <div id="layerList"></div>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script>
+  <script>
+    var map = L.map('map').setView([9.93, -84.08], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([9.93, -84.08]).addTo(map)
+      .bindPopup('Punto de ejemplo').openPopup();
+
+    // --- Carga de capas nuevas (GeoJSON) ---
+    var uploadedLayers = {};
+    var colors = ['#1a8f6f', '#3654a8', '#b5651d', '#a83654', '#548c2f'];
+    var colorIndex = 0;
+
+    var fileInput = document.getElementById('fileInput');
+    var statusEl = document.getElementById('status');
+    var layerListEl = document.getElementById('layerList');
+
+    fileInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      statusEl.textContent = 'Cargando ' + file.name + '...';
+
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        try {
+          var data = JSON.parse(evt.target.result);
+          addGeoJSONLayer(data, file.name);
+          statusEl.textContent = '';
+          fileInput.value = '';
+        } catch (err) {
+          statusEl.textContent = 'No se pudo leer el archivo. ¿Es un GeoJSON válido?';
+        }
+      };
+      reader.onerror = function () {
+        statusEl.textContent = 'Error al leer el archivo.';
+      };
+      reader.readAsText(file);
+    });
+
+    function addGeoJSONLayer(data, name) {
+      var color = colors[colorIndex % colors.length];
+      colorIndex++;
+
+      var layer = L.geoJSON(data, {
+        style: { color: color, weight: 2, fillOpacity: 0.25 },
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, { radius: 6, color: color, fillColor: color, fillOpacity: 0.7 });
+        },
+        onEachFeature: function (feature, lyr) {
+          if (feature.properties) {
+            var rows = Object.keys(feature.properties)
+              .map(function (k) { return '<strong>' + k + ':</strong> ' + feature.properties[k]; })
+              .join('<br>');
+            if (rows) lyr.bindPopup(rows);
+          }
+        }
+      }).addTo(map);
+
+      uploadedLayers[name] = layer;
+      map.fitBounds(layer.getBounds(), { maxZoom: 14 });
+
+      addLayerToggle(name, layer, color);
+    }
+
+    function addLayerToggle(name, layer, color) {
+      var row = document.createElement('div');
+
+      var checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = true;
+      checkbox.addEventListener('change', function () {
+        if (checkbox.checked) {
+          map.addLayer(layer);
+        } else {
+          map.removeLayer(layer);
+        }
+      });
+
+      var swatch = document.createElement('span');
+      swatch.style.display = 'inline-block';
+      swatch.style.width = '10px';
+      swatch.style.height = '10px';
+      swatch.style.background = color;
+      swatch.style.borderRadius = '2px';
+
+      var label = document.createElement('span');
+      label.textContent = name;
+      label.style.overflow = 'hidden';
+      label.style.textOverflow = 'ellipsis';
+      label.style.whiteSpace = 'nowrap';
+
+      row.appendChild(checkbox);
+      row.appendChild(swatch);
+      row.appendChild(label);
+      layerListEl.appendChild(row);
+    }
+  </script>
 </body>
 </html>
