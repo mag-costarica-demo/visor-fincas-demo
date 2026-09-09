@@ -1,93 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visor SIG - Introducción a GitHub</title>
 
-    <title>Data Stories</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
 
-    <link rel="stylesheet" href="css/home.css">
+  <style>
+    html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+    #map { height: 100%; }
+    .titulo {
+      position: absolute;
+      z-index: 1000;
+      top: 12px;
+      left: 50px;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      box-shadow: 0 1px 5px rgba(0,0,0,.35);
+      max-width: 360px;
+    }
+    .titulo h3 { margin: 0 0 4px; }
+    .titulo p { margin: 0; font-size: 13px; }
+  </style>
 </head>
 
 <body>
+  <div class="titulo">
+    <h3>Visor SIG de demostración</h3>
+    <p>Límites administrativos y parcelas de café y musáceas.</p>
+  </div>
 
-    <main class="landing-page">
+  <div id="map"></div>
 
-        <section class="content">
-
-            <!-- Cover -->
-            <div class="cover">
-
-                <div class="cover-overlay">
-                    <h1>DATA STORIES</h1>
-                </div>
-
-            </div>
-
-
-            <!-- Introduction -->
-            <section class="intro">
-
-                <h2>Geospatial Data & Mapping</h2>
-
-                <p class="description">
-                    Datos geoespaciales, SIG, teledetección,
-                    Google Earth Engine y visualización cartográfica,
-                    desde el análisis hasta aplicaciones web interactivas.
-                </p>
-
-            </section>
-
-
-            <!-- Subscription -->
-            <section class="subscription">
-
-                <form class="subscribe-form">
-
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Escribe tu correo..."
-                        aria-label="Correo electrónico"
-                        required
-                    >
-
-                    <button type="submit">
-                        Suscribirse
-                    </button>
-
-                </form>
-
-                <p class="subscription-text">
-                    Recibe nuevos contenidos, mapas y recursos
-                    geoespaciales directamente en tu correo.
-                </p>
-
-            </section>
-
-
-            <!-- Map -->
-            <a href="map.html" class="main-button">
-                Explorar visor cartográfico
-            </a>
-
-
-            <!-- Topics -->
-            <p class="topics">
-                GIS · Remote Sensing · Google Earth Engine · Web Mapping
-            </p>
-
-
-            <!-- Footer -->
-            <footer class="footer">
-                Desarrollado por Grettel
-            </footer>
-
-        </section>
-
-    </main>
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
