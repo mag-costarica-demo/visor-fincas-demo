@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Provincia Demo A",
+        "codigo": "A"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.35,
+              10.15
+            ],
+            [
+              -84.05,
+              10.15
+            ],
+            [
+              -84.05,
+              9.95
+            ],
+            [
+              -84.35,
+              9.95
+            ],
+            [
+              -84.35,
+              10.15
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Provincia Demo B",
+        "codigo": "B"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.05,
+              10.15
+            ],
+            [
+              -83.75,
+              10.15
+            ],
+            [
+              -83.75,
+              9.95
+            ],
+            [
+              -84.05,
+              9.95
+            ],
+            [
+              -84.05,
+              10.15
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

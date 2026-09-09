@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-001",
+        "cultivo": "Café",
+        "area_ha": 3.4,
+        "productor": "Ejemplo 1"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.22,
+              10.08
+            ],
+            [
+              -84.18,
+              10.08
+            ],
+            [
+              -84.18,
+              10.04
+            ],
+            [
+              -84.22,
+              10.04
+            ],
+            [
+              -84.22,
+              10.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-002",
+        "cultivo": "Musáceas",
+        "area_ha": 5.1,
+        "productor": "Ejemplo 2"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.98,
+              10.07
+            ],
+            [
+              -83.93,
+              10.07
+            ],
+            [
+              -83.93,
+              10.02
+            ],
+            [
+              -83.98,
+              10.02
+            ],
+            [
+              -83.98,
+              10.07
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
